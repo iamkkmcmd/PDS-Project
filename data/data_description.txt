@@ -1,0 +1,32 @@
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Variable Name				Description				Data Type					QUESTION
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ts 		- Time Stamp							DateTime	
+age 		- Age of the respondent						Continuous	What is your age?
+sex 		- Gender of the respondent					Factor		What is your sex?
+work		- Work preference of the respondent				Factor		What is your work preferences?
+
+Ratings on Physical Condition: (in 10 scale)
+phy_ff 		- Rating of liking fast food 					Factor		How much do you love fast food? 
+phy_health 	- Rating of healthiness						Factor		How physically healthy are you?
+phy_bw 		- Rating of one's preference to maintain body weight		Factor		How much recommend everyone to maintain body weight? 
+phy_ex 		- Rating of importance of exercise				Factor		How important is exercise to you?
+
+meal 		- Number of meals in a day					Discrete	How many times do you eat in a day?
+height		- Height of the respondent					Continuous	What is your height (in feet)?
+weight 		- Weight of the respondent					Continuous	What is your weight (in Kilogram)?
+exercise 	- Type of exercises 						Factor		What do you most often do for exercise?
+
+Diet Culture: (Number of times)
+fruit 		- Number of meals contain fruits				Factor		How many of your meals or snacks include fruit?
+veg		- Number of meals contain vegetables				Factor		How many of your meals or snacks include vegetables?
+cook		- Number of cooked plates					Factor		How many ready-made meals do you eat?
+
+spend 		- Expenditure on fitness					Continuous	How much money do you spend to maintain fitness (i.e. for diet, gym, nutrients etc. in total) in a month?
+income 		- Monthly family income						Continuous	What is your monthly family income?
+gymtime 	- Time spent in gym. (In a day)					Factor		How much time do you spend at gym in a day?
+disease 	- Whether suffers from any regular disease			Categorical	Do you suffer with any regular disease?
+
+review		- Review of the survey						Text		Thank you so much. If possible share your experience to fill up the survey in short. Also any suggestion you can put here. Please leave some comments.   (Optional)
+rate		- Rate the project topics and question				Factor		Rate our survey
