@@ -10,10 +10,10 @@ pacman::p_load(dplyr, ggplot2, tidyr, tidytext, lubridate, stringr)
 # Setting working directory and load the clean data file
 setwd("C:/Users/iamkkmcmd/Desktop/PDS Project/data/")
 source("C:/Users/iamkkmcmd/Desktop/PDS Project/r_files/functions.R")
-def <- read.csv("clean_data.csv")
+def <- read.csv("./data/clean_data.csv")
 
 # Plot-1: Age distribution of respondents ------------------------------------------------
-def %>% 
+plt1 <- def %>% 
     ggplot(aes(x = sex, y = age, shape = sex, col = sex, size = 0.5)) +
     geom_jitter() +
     scale_shape_manual(values = c("Male" = "\u2642", "Female" = "\u2640")) +
@@ -25,11 +25,14 @@ def %>%
     geom_text(data = def %>% 
                   group_by(sex) %>% 
                   summarise(count = n()) %>% 
-                  mutate(percent = paste0(round(count/sum(count), 2),"%")),
+                  mutate(percent = paste0(round(count*100/sum(count), 2),"%")),
               aes(label = percent, y = 45)) +
     labs(x = "Sex", y = "Age",
          title = "Age Distribution of Respondents",
          col = "Sex")  + custom_theme('none')
+
+ggsave("./figure/fig_12_wordclode.png",p,"png",dpi = 1500,width = 5,height = 5)
+
 
 # Some summary is used inside plot
 def %>% 
@@ -76,15 +79,28 @@ df_density <- def %>%
     mutate(id = 1:nrow(def)) %>% 
     relocate(id, .before = "fruit") %>% 
     gather(key, value, -c(id,spend))
-df_density %>% 
+p <- df_density %>% 
     filter(spend < 15000) %>% 
     ggplot(aes(x = spend)) +
     geom_density(aes(fill = key), alpha = 0.4) +
     facet_wrap(~value) + 
     scale_x_discrete(limits = seq(0,10000,2500), labels = c("","2.5K","5K","7.5K","10K")) +
     labs(x = "Amount of spending money", y = "Density",
-         title = "Density Plot of Diet Habits", fill = "Diet Habit") +
+         title = "Density plot of expenditure for fitness",
+         subtitle = "(According to Diet Habits)", fill = "Diet Habit:   ",
+         caption = "*Facet by number of meal/snacks contain corresponding diet habits") +
     custom_theme()
+ggsave("./figure/fig4_density_plot_of_diet_habits.png",p,"png",dpi = 1500,width = 7,height = 5)
+
+p <- def %>% 
+  filter(income < 100000) %>% 
+  ggplot(aes(x = income)) +
+  geom_density(aes(fill = sex), alpha = 0.4) +
+  scale_x_discrete(limits = seq(0,100000,25000), labels = c("0","25K","50K","75K","10K")) +
+  labs(x = "Monthly Income", y = "Density", fill = "Sex:  ",
+       title = "Gender-wise Density plot of monthly income") +
+  custom_theme()
+ggsave("./figure/fig4.1_density_plot_of_monthly_income.png",p,"png",dpi = 1500,width = 7,height = 5)
 
 
 # Plot-5: Boxplot of Weights --------------------------------------------------------
@@ -97,15 +113,15 @@ def %>%
 
 
 # Plot-6: Histogram of Expenditure for Fitness --------------------------------------
-def %>% 
+p <- def %>% 
     filter(spend < 5000) %>% 
     ggplot(aes(x = spend)) + 
     geom_histogram(aes(y = ..density..), binwidth = 250, fill = "slateblue") + 
     geom_density(kernel = "gaussian", col = "tomato4", size = 1) +
-    labs(x = "Spend", y = "Frequency", 
+    labs(x = "Spend", y = "Probability", 
          title = "Histogram of Expenditure for Fitness") + 
     custom_theme()
-
+ggsave("./figure/fig6_histogram_of_expenditure_for_fitness.png",p,"png",dpi = 1500,width = 5,height = 5)
 
 # Plot-7.1: Donut Chart of Exercise Preferences ---------------------------------------
 def$exercise <- str_replace_all(def$exercise,"Do not interested","Not interested")
@@ -225,3 +241,37 @@ ggplot(def, aes(height, weight)) + geom_density2d()
 
 # ggsave("../figure/fig_7_2_age_distribution_of_walkers.png",p,"png",dpi = 1500)
 
+
+
+install.packages("wordcloud")
+library(wordcloud)
+install.packages("RColorBrewer")
+library(RColorBrewer)
+install.packages("wordcloud2")
+library(wordcloud2)
+
+install.packages("tm")
+library(tm)
+#Create a vector containing only the text
+text <- def$review
+# Create a corpus  
+docs <- Corpus(VectorSource(text))
+
+docs <- docs %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(stripWhitespace)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeWords, stopwords("english"))
+dtm <- TermDocumentMatrix(docs) 
+matrix <- as.matrix(dtm) 
+words <- sort(rowSums(matrix),decreasing=TRUE) 
+df <- data.frame(word = names(words),freq=words)
+
+tweets_words <-  docs %>%
+  select(text) %>%
+  unnest_tokens(word, text)
+words <- tweets_words %>% count(word, sort=TRUE)
+
+p <- wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.order=FALSE, rot.per=0.35,            colors=brewer.pal(8, "Dark2"))
+wordcloud2(data=df, size=1.6, color='random-dark')

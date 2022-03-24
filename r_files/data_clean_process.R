@@ -4,7 +4,7 @@ graphics.off()
 
 # Create main data file ------------------------------------------------------------------
 
-# Set the working directory
+# Set the working 
 setwd("C:/Users/iamkkmcmd/Desktop/PDS Project/data/")
 
 # Give short name to the column name
