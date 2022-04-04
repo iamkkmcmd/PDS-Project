@@ -6,7 +6,7 @@ A project report submitted for the partial fulfillment of Semester-I, Programmin
 
 
 ## Contributors
-- [Krishnakanta Maity](https://github.com/iamkkmcmd)
+- [Krishnakanta Maity](https://iamkkmcmd.github.io)
 - [Ujjawal Choudhury](https://github.com/u77w41)
 - [Saikat Patra]()
 
